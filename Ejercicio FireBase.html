@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Citas - Clínica Odontológica</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f6f8;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px #ccc;
+        }
+        input, textarea, button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Registro de Citas</h1>
+
+<form id="citaForm">
+    <input type="text" id="nombre" placeholder="Nombre completo" required>
+    <input type="email" id="correo" placeholder="Correo electrónico" required>
+    <input type="tel" id="telefono" placeholder="Teléfono" required>
+    <input type="date" id="fecha" required>
+    <textarea id="motivo" placeholder="Motivo de la cita" required></textarea>
+    <button type="submit">Registrar Cita</button>
+</form>
+
+<!-- Firebase -->
+<script type="module">
+    // Importación de SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // Configuración de Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyB5INsESPALKGL_3g_vrww8tiA4DK4cTKk",
+        authDomain: "e1459-top-learnin.firebaseapp.com",
+        projectId: "e1459-top-learnin",
+        storageBucket: "e1459-top-learnin.firebasestorage.app",
+        messagingSenderId: "218732381690",
+        appId: "1:218732381690:web:b1b715a0b258eefdb5d043",
+        measurementId: "G-MQSJ8288LB"
+    };
+
+    // Inicializar Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Evento de Envío de Formulario
+    const form = document.getElementById('citaForm');
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Capturar valores
+        const nombre = document.getElementById('nombre').value;
+        const correo = document.getElementById('correo').value;
+        const telefono = document.getElementById('telefono').value;
+        const fecha = document.getElementById('fecha').value;
+        const motivo = document.getElementById('motivo').value;
+
+        try {
+            // Guardar en Firebase
+            await addDoc(collection(db, "citas"), {
+                nombre,
+                correo,
+                telefono,
+                fecha,
+                motivo
+            });
+
+            alert('Cita registrada exitosamente.');
+            form.reset(); // Limpiar formulario
+
+        } catch (error) {
+            console.error('Error al registrar cita: ', error);
+            alert('Hubo un error al registrar la cita.');
+        }
+    });
+</script>
+
+</body>
+</html>
